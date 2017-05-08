@@ -42,7 +42,7 @@ def fix_patch(f, hdr, i, tlen):
 def fix_headers(hdr):
 
 	print "Fix hdr with hdr %s\n" % hdr
-	pfiles = glob.glob("./to_send-p*.patch")
+	pfiles = sorted(glob.glob("./to_send-p*.patch"))
 	i = 0
 	for f in pfiles:
 		i = i + 1
