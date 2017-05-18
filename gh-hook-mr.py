@@ -92,6 +92,8 @@ if m:
 
 if branch == "api-next":
 	issue.edit(title="[PATCH API-NEXT v%d] %s" % (version, title))
+elif branch == "cloud-dev":
+	issue.edit(title="[PATCH CLOUD-DEV v%d] %s" % (version, title))
 else:
 	issue.edit(title="[PATCH v%d] %s" % (version, title))
 print issue.title
