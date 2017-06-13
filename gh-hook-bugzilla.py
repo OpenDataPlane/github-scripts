@@ -18,14 +18,26 @@ from StringIO import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
+import os
+import sys
+
+configfile = '~/gscripts_config.py'
+sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
+import gscripts_config as gcfg
+
+blogin = gcfg.gcfg['bugz']['login']
+bpassword = gcfg.gcfg['bugz']['pass']
+print ("%s" % blogin)
 
 qin = sys.stdin.read()
-f = open('python_%s.dump' % time.time(), 'w')
-pickle.dump(qin, f)
-f.close()
+#f = open('python_%s.dump' % time.time(), 'w')
+#pickle.dump(qin, f)
+#f.close()
 
-#fname = "python_1492447091.72.dump"
+#fname = "test.dump"
 #qin  = pickle.load( open(fname, "rb" ) )
+
+use_refs=['refs/heads/master']
 
 def msg_has_bug(msg):
 	buglist = set()
@@ -52,7 +64,7 @@ URL = "https://bugs.linaro.org"
 
 bzapi = bugzilla.Bugzilla(URL)
 if not bzapi.logged_in:
-    bzapi.login("login@linaro.org", "password")
+	bzapi.login(blogin, bpassword)
 
 print("Content-type: text/html\n")
 print("""<!DOCTYPE HTML>
@@ -66,11 +78,22 @@ print("""<!DOCTYPE HTML>
 io = StringIO(qin)
 js = json.load(io)
 
+found = 0
+for ref in use_refs:
+	if ref == js["ref"]:
+		found = 1
+		break;
+if not found:
+	print("<h1>ref %s is not posted to bugs</h1>" % js["ref"])
+	print("</body></html>")
+	sys.exit(0)
+
 for c in js["commits"]:
 	bugset = msg_has_bug(c["message"])
 	for bugnum in bugset:
 		bug = bzapi.getbug(bugnum)
-		bug_msg = "%s\n%s\n%s %s\n%s\n" % (c["url"],
+		bug_msg = "%s\n%s\n%s\n%s %s\n%s\n" % (c["url"],
+					js["ref"],
 		  			c["timestamp"],
 		  			c["author"]["name"], c["author"]["email"],
 		  			c["message"])
