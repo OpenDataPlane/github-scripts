@@ -20,6 +20,13 @@ from github3 import pulls
 from github3 import issues
 import os
 
+configfile = '/home/muvarov/gscripts_config.py'
+sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
+import gscripts_config as gcfg
+
+gh_login = gcfg.gcfg['gh']['login']
+gh_password = gcfg.gcfg['gh']['pass']
+
 
 qin = sys.stdin.read()
 #f = open('mr_%s.dump' % time.time(), 'w')
@@ -41,7 +48,7 @@ print("""<!DOCTYPE HTML>
 io = StringIO(qin)
 js = json.load(io)
 
-gh = login('login-github@domain.com', password='password')
+gh = login(gh_login, password=gh_password)
 me = gh.user()
 print me
 
@@ -105,6 +112,11 @@ else:
 	# return code does not reflect if event was actually
 	# removed
 	issue.remove_label("Email_sent")
+
+try:
+	issue.remove_label("checkpatch")
+except:
+	pass
 
 print "body_text %s\n" % issue.body_text
 
