@@ -79,12 +79,13 @@ for pull in repo.get_pulls():
 		if agreement_ret == 0:
 			c.create_status(state="success",
 					target_url="http://none",
-					description="ODP License Agreement", context="ODP License Agreement")
+					description="ODP License Agreement",
+					context="ODP License Agreement")
 		else:
 			c.create_status(state="failure", 
 					target_url="https://www.opendataplane.org/contributor/individual/", 
 					description="ODP License Agreement",
-					context="Individual or Corporate agreement check err")
+					context="ODP License Agreement")
 
 	label = repo.get_label("checkpatch")
 	if not label:
