@@ -88,7 +88,7 @@ print "branch = %s\n" % branch
 title = issue.title
 
 version = 0
-for m in re.finditer(r'PATCH.*v([0-9]+)', title):
+for m in re.finditer(r'\[PATCH.*v([0-9]+)\]', title):
 	version = int(m.group(1))
 
 version += 1
