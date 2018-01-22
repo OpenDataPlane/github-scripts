@@ -18,7 +18,7 @@ import email
 import smtplib
 from email.mime.text import MIMEText
 
-configfile = '/home/muvarov/gscripts_config.py'
+configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
 import gscripts_config as gcfg
 

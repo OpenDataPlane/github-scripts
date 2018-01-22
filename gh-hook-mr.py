@@ -20,7 +20,7 @@ from github3 import pulls
 from github3 import issues
 import os
 
-configfile = '/home/muvarov/gscripts_config.py'
+configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
 import gscripts_config as gcfg
 
