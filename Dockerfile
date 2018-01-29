@@ -14,6 +14,7 @@ RUN apt-get update \
 
 RUN pip install --upgrade pip
 RUN pip install github3.py
+RUN pip install python-bugzilla
 
 RUN git clone https://github.com/muvarov/githubscripts.git /githubscripts \
     && echo "#!/bin/bash \n \
@@ -46,12 +47,20 @@ RUN echo "server { \n \
                 include fastcgi_params; \n \
                 auth_basic off; \n \
 	} \n \
+	location /html { \n \
+		try_files \$uri \$uri/ =404; \n \
+                auth_basic off; \n \
+	} \n \
 }\n " > /etc/nginx/sites-available/default
 
+RUN mkdir -p  /var/www/html/html
 RUN ln -s /githubscripts/*.py  /var/www/html/
+RUN ln -s /githubscripts/html/*.html  /var/www/html/html/
+
 
 RUN echo "0 * * * * /cron_job.sh" > /var/spool/cron/crontabs/root
 
+RUN mkdir ~/.ssh
 RUN echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPZDbZna+kTmX+M4NABTfUDu3RYPYe9adfUdwCnZhv+dJsKSNG0udzkHQo4BvXDVjeQLeN3lRLUjRTe/sZ76lWkXk32fRZBXUL8N1mKaVU9hCURCnGvM+n0BDRtagMU8dpl/BOgHY+D5XAyqoY2VoAZHqS94RPnEXlEDJMFtCzYQPjqftLA+Z3N2h6kJ9ftjHEaMmLLz9/vIugqRsMvBPLfACSDLuU6qo5fyDqgumyFssKsu8T8OMMf2pzkNdBTh8Fnh8+2Cn5ON1WHK03rhj17FKP8fpIA1wS6n+tBYZY6IcNyMyu0gbiySwiCUZZBbOYEXcIMc61gZMH0KrdHpZT muvarov@maxim-desktop >> ~/.ssh/authorized_keys
 
-#spawn-fcgi -s /var/run/fcgiwrap.socket /usr/sbin/fcgiwrap && chown www-data:www-data /var/run/fcgiwrap.socket && nginx
+#spawn-fcgi -s /var/run/fcgiwrap.socket /usr/sbin/fcgiwrap && chown www-data:www-data /var/run/fcgiwrap.socket && /etc/init.d/cron restart && nginx
