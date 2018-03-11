@@ -19,6 +19,8 @@ RUN pip install python-bugzilla
 RUN git clone https://github.com/muvarov/githubscripts.git /githubscripts \
     && echo "#!/bin/bash \n \
       git clone https://github.com/muvarov/githubscripts.git \n \
+      cd githubscripts \n \
+      git pull \n  \
       python gh-mail-pr.py \n  \
       sleep 5 \n \
       python gh-mail-pr-dpdk.py \n \
