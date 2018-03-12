@@ -10,7 +10,8 @@ RUN apt-get update \
 	cron \
 	vim \
 	openssh-server \
-	python-pip python-setuptools python-github python-imaplib2
+	python-pip python-setuptools python-github python-imaplib2 \
+	procmail
 
 RUN pip install --upgrade pip
 RUN pip install github3.py
