@@ -13,7 +13,7 @@ import re
 import glob
 import sys
 
-configfile = '/home/muvarov/gscripts_config.py'
+configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
 import gscripts_config as gcfg
 
@@ -82,13 +82,13 @@ for pull in repo.get_pulls():
 					description="ODP License Agreement",
 					context="ODP License Agreement")
 		else:
-			c.create_status(state="failure", 
-					target_url="https://www.opendataplane.org/contributor/individual/", 
+			c.create_status(state="failure",
+					target_url="https://www.opendataplane.org/contributor/individual/",
 					description="ODP License Agreement",
 					context="ODP License Agreement")
 
 	label = repo.get_label("checkpatch")
 	if not label:
 		label = repo.create_label("checkpatch",  "0000ff")
-	
+
 	issue.add_to_labels(label)
