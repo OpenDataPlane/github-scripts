@@ -77,6 +77,7 @@ def process_email(i, efrom, msg, pr):
 	return
 
 def get_all_prs():
+	print "reading cache"
 	mail.select(readonly=1) # Select inbox or default namespace
 	(retcode, messages) = mail.search(None, '(SEEN)')
 
@@ -89,6 +90,7 @@ def get_all_prs():
 			pull_rq_db[msg_str['Message-ID']] = pr
 			print pr,
 			sys.stdout.flush()
+	print "reading cache done"
 	return
 
 
