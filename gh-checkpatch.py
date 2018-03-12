@@ -54,6 +54,7 @@ def do_checkpatch(sha):
 	return [check_patch_ret, agreement_ret]
 
 my_system("git clone https://git.linaro.org/people/maxim.uvarov/odp-agreement.git")
+my_system("cd odp-agreement && git pull")
 
 for pull in repo.get_pulls():
 	issue = repo.get_issue(pull.number)
