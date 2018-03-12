@@ -4,6 +4,7 @@ from github3 import issues
 import os
 import re
 import glob
+import sys
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
