@@ -150,9 +150,9 @@ for num in messages[0].split():
 	mail.store(num, '+FLAGS', '\\SEEN')
 	process_email(i, efrom, body, repo.pull_request(pr))
 
-	f = open("eml/em-%d.eml" % i, "w")
-	f.write(msg)
-	f.close()
+	#f = open("eml/em-%d.eml" % i, "w")
+	#f.write(msg)
+	#f.close()
 
 	i = i + 1
 
