@@ -9,15 +9,25 @@ from github3 import login
 from github3 import pulls
 from github3 import issues
 
+configfile = '~/gscripts_config.py'
+sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
+import gscripts_config as gcfg
+
+imap_login = gcfg.gcfg['imap']['login']
+imap_password = gcfg.gcfg['imap']['pass']
+
 mail = imaplib.IMAP4_SSL('imap.yandex.ru')
-mail.login('imap-login@domain.com', 'imap-password')
+mail.login(imap_login, imap_password)
 mail.list()
 # Out: list of "folders" aka labels in gmail.
 mail.select("inbox") # connect to inbox.
 
 pull_rq_db = {}
 
-gh = login('github-login@domai.com', password='github-password')
+gh_login = gcfg.gcfg['gh']['login']
+gh_password = gcfg.gcfg['gh']['pass']
+
+gh = login(gh_login, password=gh_password)
 me = gh.user()
 print me
 
