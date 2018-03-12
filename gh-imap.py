@@ -88,8 +88,9 @@ def get_all_prs():
 		pr = get_find_pull_req(msg)
 		if pr != "":
 			pull_rq_db[msg_str['Message-ID']] = pr
-			print pr,
-			sys.stdout.flush()
+			#print pr,
+			#sys.stdout.flush()
+		print "%d/%d\n" % (num, len(messages[0].split()))
 	print "reading cache done"
 	return
 
