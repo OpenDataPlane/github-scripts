@@ -4,6 +4,7 @@ import imaplib
 import email
 import re
 import sys
+import os
 
 from github3 import login
 from github3 import pulls
