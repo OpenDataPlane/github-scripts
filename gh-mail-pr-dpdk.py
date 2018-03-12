@@ -9,21 +9,21 @@ configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
 import gscripts_config as gcfg
 
-
 gh_login = gcfg.gcfg['gh']['login']
 gh_password = gcfg.gcfg['gh']['pass']
+
 
 gh = login(gh_login, password=gh_password)
 me = gh.user()
 print me
 
-repo = gh.repository(me, "Linaro\/odp")
+repo = gh.repository(me, "Linaro\/odp-dpdk")
 print repo
 
 for r in gh.iter_repos():
 	print r.full_name
 	print r.name
-	if r.full_name == "Linaro/odp":
+	if r.full_name == "Linaro/odp-dpdk":
 		repo = r
 		break
 
@@ -130,7 +130,7 @@ def email_patches(edata):
 
 	options = "--smtp-server=\"smtp.server\" --smtp-ssl --smtp-pass=\"password\" --smtp-encryption=tls --smtp-user=\"odpbot\" --from=\"Github ODP bot  <odpbot@yandex.ru>\""
 
-	my_system("git send-email --confirm=never --to ml-listp@lists.real  --suppress-cc=all %s to_send*.patch" % options)
+	my_system("git send-email --confirm=never --to lng-odp-dpdk@lists.linaro.org --suppress-cc=all %s to_send*.patch" % options)
 	#my_system("git send-email --confirm=never --to muvarov@gmail.com --suppress-cc=all %s to_send*.patch" % options)
 
 
