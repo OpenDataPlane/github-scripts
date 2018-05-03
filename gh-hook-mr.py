@@ -96,7 +96,7 @@ for m in re.finditer(r'\[PATCH.*v([0-9]+)\]', title):
 
 version += 1
 
-m = re.search(r"\[PATCH.*\] (.*)", title)
+m = re.search(r"\[PATCH.*?\] (.*)", title)
 if m:
 	title = m.group(1)
 
