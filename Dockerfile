@@ -14,6 +14,9 @@ RUN apt-get update \
 	python-pip python-setuptools python-github python-imaplib2 \
 	procmail
 
+RUN git config --global user.email odpbot@yandex.ru
+RUN git config --global user.name "Github ODP bot"
+
 RUN pip install --upgrade pip
 RUN pip install github3.py
 RUN pip install python-bugzilla
