@@ -19,6 +19,8 @@ import imaplib
 import email
 import smtplib
 from email.mime.text import MIMEText
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))

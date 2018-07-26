@@ -8,7 +8,8 @@ import os
 import re
 import glob
 import sys
-
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))

@@ -6,6 +6,8 @@ import email
 import re
 import sys
 import os
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 from github3 import login
 from github3 import pulls

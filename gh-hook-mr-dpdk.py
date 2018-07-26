@@ -21,6 +21,8 @@ from github3 import login
 from github3 import pulls
 from github3 import issues
 import os
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
