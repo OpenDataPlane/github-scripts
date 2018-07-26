@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# encoding=utf8
+
 #
 # Cron script to validate patches in open pull requests.
 # 1. Validation skipped if "checkpatch" label is set.

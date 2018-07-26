@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# encoding=utf8
+
 from github3 import login
 from github3 import pulls
 from github3 import issues

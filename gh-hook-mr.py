@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# encoding=utf8
 
 # github pull request update script
 #

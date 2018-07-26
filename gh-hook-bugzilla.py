@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# encoding=utf8
 
 # bugzilla github push web hook
 #
