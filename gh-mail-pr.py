@@ -141,7 +141,7 @@ def email_patches(edata):
 	my_system("rm -rf pr_mod.patch")
 	my_system("rm -rf pr.patch")
 
-	options = "--smtp-server=\"%s\" --smtp-ssl --smtp-pass=\"%s\" --smtp-encryption=tls --smtp-user=\"%s\" --from=\"Github ODP bot  <odpbot@yandex.ru>\"" % (smtp_server, smtp_pass, smtp_user)
+	options = "--smtp-server=\"%s\" --smtp-ssl --smtp-pass=\"%s\" --smtp-encryption=tls --smtp-user=\"%s\" --from=\"Github ODP bot  <odpbot@yandex.ru>\"" % (smtp_server, smtp_password, smtp_user)
 
 	my_system("git send-email --confirm=never --to lng-odp@lists.linaro.org --suppress-cc=all %s to_send*.patch" % options)
 
