@@ -19,6 +19,13 @@ import gscripts_config as gcfg
 gh_login = gcfg.gcfg['gh']['login']
 gh_password = gcfg.gcfg['gh']['pass']
 
+imap_login = gcfg.gcfg['imap']['login']
+imap_password = gcfg.gcfg['imap']['pass']
+
+smtp_server = gcfg.gcfg['smpt']['server']
+smtp_user = gcfg.gcfg['smpt']['user']
+smtp_password = gcfg.gcfg['smtp']['pass']
+
 gh = login(gh_login, password=gh_password)
 me = gh.user()
 print me
@@ -134,10 +141,9 @@ def email_patches(edata):
 	my_system("rm -rf pr_mod.patch")
 	my_system("rm -rf pr.patch")
 
-	options = "--smtp-server=\"smtp.server\" --smtp-ssl --smtp-pass=\"password\" --smtp-encryption=tls --smtp-user=\"odpbot\" --from=\"Github ODP bot  <odpbot@yandex.ru>\""
+	options = "--smtp-server=\"%s\" --smtp-ssl --smtp-pass=\"%s\" --smtp-encryption=tls --smtp-user=\"%s\" --from=\"Github ODP bot  <odpbot@yandex.ru>\"" % (smtp_server, smtp_pass, smtp_user)
 
-	my_system("git send-email --confirm=never --to ml-listp@lists.real  --suppress-cc=all %s to_send*.patch" % options)
-	#my_system("git send-email --confirm=never --to muvarov@gmail.com --suppress-cc=all %s to_send*.patch" % options)
+	my_system("git send-email --confirm=never --to lng-odp@lists.linaro.org --suppress-cc=all %s to_send*.patch" % options)
 
 
 #for x in  repo.iter_issues():
