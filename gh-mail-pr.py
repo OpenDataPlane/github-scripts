@@ -22,8 +22,8 @@ gh_password = gcfg.gcfg['gh']['pass']
 imap_login = gcfg.gcfg['imap']['login']
 imap_password = gcfg.gcfg['imap']['pass']
 
-smtp_server = gcfg.gcfg['smpt']['server']
-smtp_user = gcfg.gcfg['smpt']['user']
+smtp_server = gcfg.gcfg['smtp']['server']
+smtp_user = gcfg.gcfg['smtp']['user']
 smtp_password = gcfg.gcfg['smtp']['pass']
 
 gh = login(gh_login, password=gh_password)
