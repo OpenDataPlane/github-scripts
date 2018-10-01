@@ -19,6 +19,7 @@ import re
 from github3 import login
 from github3 import pulls
 from github3 import issues
+from github3 import issue
 import os
 reload(sys)  
 sys.setdefaultencoding('utf8')
@@ -36,7 +37,7 @@ qin = sys.stdin.read()
 #pickle.dump(qin, f)
 #f.close()
 
-#fname = "mr_1493307805.62.dump"
+#fname = "mr_1537464128.91.dump"
 #qin  = pickle.load( open(fname, "rb" ) )
 
 print("Content-type: text/html\n")
@@ -51,26 +52,7 @@ print("""<!DOCTYPE HTML>
 io = StringIO(qin)
 js = json.load(io)
 
-gh = login(gh_login, password=gh_password)
-me = gh.user()
-print me
-
-repo = 0
-for r in gh.iter_repos():
-	print r.full_name
-	if r.full_name == "Linaro/odp":
-	#if r.full_name == "muvarov/odp":
-		repo = r
-		break
-
-if not repo:
-	print "Repo not found"
-	sys.exit(1)
-
-#for key, value in js['pull_request'].iteritems() :
-#   print "\n\n\n\n----------------"
-#    print key
-#    print value
+gh = login(gh_login, gh_password)
 
 action = js['action']
 if action == "synchronize" or action == "opened":
@@ -81,8 +63,8 @@ else:
 	sys.exit(0)
 
 pr_num  = js['pull_request']['number']
-pr = repo.pull_request(pr_num)
-issue =  repo.issue(pr_num)
+#pr = repo.pull_request(pr_num)
+issue = gh.issue("Linaro", "odp", pr_num)
 
 
 branch  = js['pull_request']['base']['ref']
@@ -116,8 +98,10 @@ if commits > 20:
 else:
 	# return code does not reflect if event was actually
 	# removed
-	issue.remove_label("Email_sent")
-
+	try:
+		issue.remove_label("Email_sent")
+	except:
+		pass
 try:
 	issue.remove_label("checkpatch")
 except:
