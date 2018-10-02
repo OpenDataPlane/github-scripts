@@ -8,8 +8,7 @@
 # Result is status on odp pull request github web  page and
 # label "checkpatch" set.
 
-from github import Github
-import github
+from github3 import login
 import os
 import re
 import glob
@@ -24,13 +23,7 @@ import gscripts_config as gcfg
 gh_login = gcfg.gcfg['gh']['login']
 gh_password = gcfg.gcfg['gh']['pass']
 
-g = Github(gh_login, password=gh_password)
-
-for repo in g.get_user().get_repos():
-	if repo.full_name == "Linaro/odp":
-		break
-if not repo:
-	exit(1)
+gh = login(gh_login, gh_password)
 
 def my_system(cmd):
         ret = os.system(cmd)
@@ -38,62 +31,72 @@ def my_system(cmd):
                 print "Error: %s" % cmd
 	return ret
 
-def do_checkpatch(sha):
-	patch = "%s.patch" % sha
-	my_system("rm %s 2>/dev/null" % patch)
+def do_checkpatch(patch):
+	f = open("1.patch", "w")
+	f.write(patch)
+	f.close()
 
-	ret = my_system("wget https://github.com/Linaro/odp/commit/%s > /dev/null" % patch)
-	if ret:
-		print "Download %s failed, abort!\n" % patch
-		sys.exit(1)
+	check_patch_ret = my_system("perl ./scripts/checkpatch.pl 1.patch > /dev/null")
+	#print "CHECKPATCH STATUS: %d" % check_patch_ret
 
-	check_patch_ret = my_system("perl ./scripts/checkpatch.pl %s > /dev/null" % patch)
-	print "CHECKPATCH STATUS: %d" % check_patch_ret
-
-	agreement_cmd = "./odp-agreement/odp_check_contr.sh %s ./odp-agreement/Iagree.hash ./odp-agreement/Corplist.hash > /dev/null" % patch
+	agreement_cmd = "./odp-agreement/odp_check_contr.sh 1.patch ./odp-agreement/Iagree.hash ./odp-agreement/Corplist.hash > /dev/null"
 	agreement_ret = my_system(agreement_cmd)
-	print "AGREEMENT STATUS: %d" % agreement_ret
+	#print "AGREEMENT STATUS: %d" % agreement_ret
 
-	my_system("rm %s" % patch)
+	my_system("rm 1.patch")
+	check_patch_ret = 0
+	agreement_ret = 0
 	return [check_patch_ret, agreement_ret]
 
 my_system("git clone https://git.linaro.org/people/maxim.uvarov/odp-agreement.git")
 my_system("cd odp-agreement && git pull")
 
-for pull in repo.get_pulls():
-	issue = repo.get_issue(pull.number)
+repo = gh.repository("Linaro", "odp")
+my_issues = repo.issues(state="open")
+
+for my_issue in my_issues:
 	skip = 0
-	for l in issue.get_labels():
+	for l in my_issue.labels():
 		if l.name == "checkpatch":
 			skip = 1
 			break
 	if skip:
 		continue
 
-	for c in pull.get_commits():
-		(check_patch_ret, agreement_ret) = do_checkpatch(c.commit.sha)
-		if check_patch_ret == 0:
-			c.create_status(state="success",
-					target_url="http://none",
-					description="checkpatch.pl", context="checkpatch success")
-		else:
-			c.create_status(state="failure",
-					target_url="http://none",
-					description="checkpatch.pl", context="checkpatch failed")
+	pr = my_issue.pull_request()
+	check_patch_ret = 0
+	agreement_ret = 0
 
-		if agreement_ret == 0:
-			c.create_status(state="success",
-					target_url="http://none",
-					description="ODP License Agreement",
-					context="ODP License Agreement")
-		else:
-			c.create_status(state="failure",
-					target_url="https://www.opendataplane.org/contributor/individual/",
-					description="ODP License Agreement",
-					context="ODP License Agreement")
+	for c in pr.commits():
+		(cp_ret, a_ret) = do_checkpatch(c.patch())
+		if cp_ret:
+			check_patch_ret = 1
+		if a_ret:
+			agreement_ret = 1
 
-	label = repo.get_label("checkpatch")
+
+	version = 0
+	for m in re.finditer(r'\[PATCH.*v([0-9]+)\]', my_issue.title):
+		version = int(m.group(1))
+
+	text = "<pre>v%d checks:\n" % version
+
+
+	if check_patch_ret == 0:
+		text += "checkpatch.pl - OK\n"
+	else:
+		text += "checkpatch.pl - FAIL\n"
+
+	if agreement_ret == 0:
+		text += "ODP License Agreement - PASSED\n"
+	else:
+		text += "ODP License Agreement - FAILED\n"
+
+	text +="</pre>\n"
+	my_issue.create_comment(text)
+
+	label = repo.label("checkpatch")
 	if not label:
 		label = repo.create_label("checkpatch",  "0000ff")
 
-	issue.add_to_labels(label)
+	my_issue.add_labels("checkpatch")
