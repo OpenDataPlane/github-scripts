@@ -64,6 +64,8 @@ for my_issue in my_issues:
 		continue
 
 	pr = my_issue.pull_request()
+	if not pr:
+		continue
 	check_patch_ret = 0
 	agreement_ret = 0
 
