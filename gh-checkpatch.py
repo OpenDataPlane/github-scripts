@@ -51,7 +51,7 @@ def do_checkpatch(patch):
 my_system("git clone https://git.linaro.org/people/maxim.uvarov/odp-agreement.git")
 my_system("cd odp-agreement && git pull")
 
-repo = gh.repository("Linaro", "odp")
+repo = gh.repository("OpenDataPlane", "odp")
 my_issues = repo.issues(state="open")
 
 for my_issue in my_issues:

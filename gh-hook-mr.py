@@ -64,7 +64,7 @@ else:
 
 pr_num  = js['pull_request']['number']
 #pr = repo.pull_request(pr_num)
-issue = gh.issue("Linaro", "odp", pr_num)
+issue = gh.issue("OpenDataPlane", "odp", pr_num)
 
 
 branch  = js['pull_request']['base']['ref']

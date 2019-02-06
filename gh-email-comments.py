@@ -33,7 +33,7 @@ gh_password = gcfg.gcfg['gh']['pass']
 g = Github(gh_login, password=gh_password)
 
 for repo in g.get_user().get_repos():
-	if repo.full_name == "Linaro/odp":
+	if repo.full_name == "OpenDataPlane/odp":
 		break
 if not repo:
 	exit(1)
@@ -99,7 +99,6 @@ def smtp_send_comment(pull, rvc, id):
 	msg['From'] =  "Github ODP bot  <odpbot@yandex.ru>"
 	msg['To'] = "lng-odp@lists.linaro.org"
 	msg['In-Reply-To'] = id
-	#msg['To'] = "maxim.uvarov@linaro.org"
 
 	smtp_server = gcfg.gcfg['smtp']['server']
 	smtp_login = gcfg.gcfg['smtp']['login']

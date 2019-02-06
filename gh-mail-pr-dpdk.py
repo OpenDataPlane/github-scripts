@@ -26,13 +26,13 @@ gh = login(gh_login, password=gh_password)
 me = gh.user()
 print me
 
-repo = gh.repository(me, "Linaro\/odp-dpdk")
+repo = gh.repository(me, "OpenDataPlane\/odp-dpdk")
 print repo
 
 for r in gh.iter_repos():
 	print r.full_name
 	print r.name
-	if r.full_name == "Linaro/odp-dpdk":
+	if r.full_name == "OpenDataPlane/odp-dpdk":
 		repo = r
 		break
 
