@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 # github pull request update script
 #
@@ -11,7 +10,7 @@ import pickle
 import sys
 import time
 import json
-from StringIO import StringIO
+from io import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
@@ -21,8 +20,6 @@ from github3 import pulls
 from github3 import issues
 from github3 import issue
 import os
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -68,7 +65,7 @@ issue = gh.issue("OpenDataPlane", "odp", pr_num)
 
 
 branch  = js['pull_request']['base']['ref']
-print "branch = %s\n" % branch
+print("branch = %s\n" % branch)
 
 title = issue.title
 
@@ -90,7 +87,7 @@ elif branch == "2.0":
 	issue.edit(title="[PATCH 2.0 v%d] %s" % (version, title))
 else:
 	issue.edit(title="[PATCH v%d] %s" % (version, title))
-print issue.title
+print(issue.title)
 
 commits = js['pull_request']['commits']
 if commits > 20:
@@ -107,7 +104,7 @@ try:
 except:
 	pass
 
-print "body_text %s\n" % issue.body_text
+print("body_text %s\n" % issue.body_text)
 
 
 print("<h1>all ok!</h1>")

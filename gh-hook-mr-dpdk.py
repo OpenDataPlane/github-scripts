@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 
 # github pull request update script
@@ -12,7 +11,7 @@ import pickle
 import sys
 import time
 import json
-from StringIO import StringIO
+from io import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
@@ -21,8 +20,6 @@ from github3 import login
 from github3 import pulls
 from github3 import issues
 import os
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -54,17 +51,17 @@ js = json.load(io)
 
 gh = login(gh_login, password=gh_password)
 me = gh.user()
-print me
+print(me)
 
 repo = 0
 for r in gh.iter_repos():
-	print r.full_name
+	print(r.full_name)
 	if r.full_name == "OpenDataPlane/odp-dpdk":
 		repo = r
 		break
 
 if not repo:
-	print "Repo not found"
+	print("Repo not found")
 	sys.exit(1)
 
 #for key, value in js['pull_request'].iteritems() :
@@ -86,7 +83,7 @@ issue =  repo.issue(pr_num)
 
 
 branch  = js['pull_request']['base']['ref']
-print "branch = %s\n" % branch
+print("branch = %s\n" % branch)
 
 title = issue.title
 
@@ -108,7 +105,7 @@ elif branch == "2.0":
 	issue.edit(title="[PATCH 2.0 v%d] %s" % (version, title))
 else:
 	issue.edit(title="[PATCH v%d] %s" % (version, title))
-print issue.title
+print(issue.title)
 
 commits = js['pull_request']['commits']
 if commits > 20:
@@ -123,7 +120,7 @@ try:
 except:
 	pass
 
-print "body_text %s\n" % issue.body_text
+print("body_text %s\n" % issue.body_text)
 
 
 print("<h1>all ok!</h1>")

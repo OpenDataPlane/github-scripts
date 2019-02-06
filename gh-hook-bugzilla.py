@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 # bugzilla github push web hook
 #
@@ -15,14 +14,12 @@ import pickle
 import sys
 import time
 import json
-from StringIO import StringIO
+from io import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
 import os
 import sys
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -46,22 +43,23 @@ def msg_has_bug(msg):
 	buglist = set()
 	print("%s\n" % msg)
 	for m in re.finditer('https://bugs\.linaro\.org/show_bug\.cgi\?id=([0-9]+)', msg):
-                buglist.add(m.group(1))
+		buglist.add(m.group(1))
 
 	for m in re.finditer(r'[bB]ug #([0-9]+)', msg):
-                buglist.add(m.group(1))
+		buglist.add(m.group(1))
 
 	for m in re.finditer(r'[bB]ug ([0-9]+)', msg):
-                buglist.add(m.group(1))
+		buglist.add(m.group(1))
 
 	for m in re.finditer(r'[bB]ug: ([0-9]+)', msg):
-                buglist.add(m.group(1))
+		buglist.add(m.group(1))
 
 	for m in re.finditer(r'[Ff]ixes: ([0-9]+)', msg):
-                buglist.add(m.group(1))
+		buglist.add(m.group(1))
 
 	print("%s\n" % str(buglist))
-        return buglist
+
+	return buglist
 
 URL = "https://bugs.linaro.org"
 
@@ -97,9 +95,9 @@ for c in js["commits"]:
 		bug = bzapi.getbug(bugnum)
 		bug_msg = "%s\n%s\n%s\n%s %s\n%s\n" % (c["url"],
 					js["ref"],
-		  			c["timestamp"],
-		  			c["author"]["name"], c["author"]["email"],
-		  			c["message"])
+					c["timestamp"],
+					c["author"]["name"], c["author"]["email"],
+					c["message"])
 
 		update = bzapi.build_update(comment=bug_msg)
 		bzapi.update_bugs([bug.id], update)

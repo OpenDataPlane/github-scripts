@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 #
 # Cron script to validate patches in open pull requests.
@@ -13,8 +12,6 @@ import os
 import re
 import glob
 import sys
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -26,9 +23,9 @@ gh_password = gcfg.gcfg['gh']['pass']
 gh = login(gh_login, gh_password)
 
 def my_system(cmd):
-        ret = os.system(cmd)
-        if ret:
-                print "Error: %s" % cmd
+	ret = os.system(cmd)
+	if ret:
+		print("Error: %s" % cmd)
 	return ret
 
 def do_checkpatch(patch):
