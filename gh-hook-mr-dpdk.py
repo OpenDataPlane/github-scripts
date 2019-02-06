@@ -59,7 +59,7 @@ print me
 repo = 0
 for r in gh.iter_repos():
 	print r.full_name
-	if r.full_name == "Linaro/odp-dpdk":
+	if r.full_name == "OpenDataPlane/odp-dpdk":
 		repo = r
 		break
 
