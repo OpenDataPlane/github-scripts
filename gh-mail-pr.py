@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 from github3 import login
 from github3 import pulls
@@ -8,8 +7,6 @@ import os
 import re
 import glob
 import sys
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -27,15 +24,15 @@ smtp_user = gcfg.gcfg['smtp']['login']
 smtp_password = gcfg.gcfg['smtp']['pass']
 
 gh = login(gh_login, password=gh_password)
-me = gh.user()
-print me
+me = gh.me()
+print(me)
 
 repo = gh.repository(me, "OpenDataPlane\/odp")
-print repo
+print(repo)
 
 for r in gh.iter_repos():
-	print r.full_name
-	print r.name
+	print(r.full_name)
+	print(r.name)
 	if r.full_name == "OpenDataPlane/odp":
 		repo = r
 		break
@@ -46,7 +43,7 @@ if not repo:
 def my_system(cmd):
 	ret = os.system(cmd)
 	if ret:
-		print "Error: %s" % cmd
+		print("Error: %s" % cmd)
 
 def fix_patch(f, hdr, i, tlen):
 	fin = open(f, "r+")
@@ -62,7 +59,7 @@ def fix_patch(f, hdr, i, tlen):
 
 def fix_headers(hdr):
 
-	print "Fix hdr with hdr %s\n" % hdr
+	print("Fix hdr with hdr %s\n" % hdr)
 	pfiles = sorted(glob.glob("./to_send-p*.patch"))
 	i = 0
 	for f in pfiles:
@@ -72,8 +69,8 @@ def fix_headers(hdr):
 	return i
 
 def email_patches(edata):
-	#print "Email:", edata['patch_url']
-	#print "Email:", edata['base_sha']
+	#print("Email:", edata['patch_url'])
+	#print("Email:", edata['base_sha'])
 	my_system("wget -O pr.patch -o /dev/null %s" % edata['patch_url'])
 	fin = open("pr.patch","r+")
 	fout = open("pr_mod.patch","w")
@@ -88,7 +85,7 @@ def email_patches(edata):
 			fout.write(l)
 			continue
 
-		#print "line=%s" % l
+		#print("line=%s" % l)
 		if l.rstrip("\n") != "---":
 			fout.write(l)
 		else:
@@ -147,25 +144,25 @@ def email_patches(edata):
 
 
 #for x in  repo.iter_issues():
-#	print"----------------", x.number, "--------"
-#	print x.pull_request
-#	print "Label:"
+#	print"----------------", x.number, "--------")
+#	print(x.pull_request)
+#	print("Label:")
 #	for l in  x.iter_labels():
-#		print l
-#	print "Comments:"
+#		print(l)
+#	print("Comments:")
 #	for c in x.iter_comments():
-#		print c.body_text
+#		print(c.body_text)
 #	x.add_labels("Maxlabel")
 #	email_patches(x.pull_request['patch_url'])
 
 for p in repo.iter_pulls():
 	edata= {}
-	#print p
-	#print p.base.sha
-	#print p.head.label
-	#print p.body
-	#print p.body_text
-	print "Pull request %d" %  p.number
+	#print(p)
+	#print(p.base.sha)
+	#print(p.head.label)
+	#print(p.body)
+	#print(p.body_text)
+	print("Pull request %d" %  p.number)
 
 	edata['url'] = p.html_url
 	edata['head_label'] = p.head.label
@@ -191,29 +188,29 @@ for p in repo.iter_pulls():
 	issue = repo.issue(p.number)
 
 	#for c in  p.iter_commits():
-	#	print c.sha
+	#	print(c.sha)
 
-	print "Label:"
+	print("Label:")
 	skip = 0
 	for l in  issue.iter_labels():
 		if l.name == "Email_sent":
-			print l.name
+			print(l.name)
 			#if p.number == 21:
 			#	break
 			skip = 1
 			break
 		if l.name == "No_Email_sent":
-			print l.name
+			print(l.name)
 			skip = 1
 			break
 	if skip:
-		print "skipping sending email for PR %d\n" % p.number
+		print("skipping sending email for PR %d\n" % p.number)
 		continue
 
 
-	#print "Comments:"
+	#print("Comments:")
 	#for c in p.iter_issue_comments():
-	#	print c.body_text
+	#	print(c.body_text)
 
 	email_patches(edata)
 	issue.add_labels("Email_sent")

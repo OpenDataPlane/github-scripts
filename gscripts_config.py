@@ -1,7 +1,6 @@
-#!/usr/bin/env python
-# encoding=utf8
+#!/usr/bin/env python3
 
-print "Using config: %s" %  __name__
+print("Using config: %s" %  __name__)
 
 gcfg = {'bugz': {"login": "log", "pass": "pass"},
 	'gh': {"login": "log", "pass": "pass"},

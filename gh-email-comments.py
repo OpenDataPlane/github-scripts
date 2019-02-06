@@ -1,5 +1,4 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 #
 # Cron script to validate patches in open pull requests.
@@ -19,8 +18,6 @@ import imaplib
 import email
 import smtplib
 from email.mime.text import MIMEText
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 configfile = '~/gscripts_config.py'
 sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
@@ -133,7 +130,7 @@ for pull in repo.get_pulls():
 		pull_cache = pickle.load(f)
 		f.close()
 	except:
-		print "return at 1"
+		print("return at 1")
 		break
 
 	try:
@@ -142,7 +139,7 @@ for pull in repo.get_pulls():
 				email_new_comment(pull, rvc)
 				pull_cache[rvc.id] = { rvc.body }
 	except:
-		print "return at 2"
+		print("return at 2")
 		break
 
 	f = open(filename, 'w')

@@ -1,13 +1,10 @@
-#!/usr/bin/python
-# encoding=utf8
+#!/usr/bin/env python3
 
 import imaplib
 import email
 import re
 import sys
 import os
-reload(sys)  
-sys.setdefaultencoding('utf8')
 
 from github3 import login
 from github3 import pulls
@@ -33,14 +30,14 @@ gh_password = gcfg.gcfg['gh']['pass']
 
 gh = login(gh_login, password=gh_password)
 me = gh.user()
-print me
+print(me)
 
 repo = gh.repository(me, "OpenDataPlane\/odp")
-print repo
+print(repo)
 
 for r in gh.iter_repos():
-	print r.full_name
-	print r.name
+	print(r.full_name)
+	print(r.name)
 	if r.full_name == "OpenDataPlane/odp":
 		repo = r
 		break
@@ -48,14 +45,14 @@ for r in gh.iter_repos():
 if not repo:
 	exit(1)
 
-print "Using github repo %s" % r.full_name
+print("Using github repo %s" % r.full_name)
 
 # get new messages
 
 def is_patch(msg):
 	m = re.search("\nSubject.*Re:.*PATCH.*\n", msg)
 	if m:
-		#print m.group(0)
+		#print(m.group(0))
 		return 1
 	return 0
 
@@ -71,7 +68,7 @@ def process_email(i, efrom, msg, pr):
 	#f.close()
 
 	#for ic in pr.iter_issue_comments():
-	#	print ic
+	#	print(ic)
 	issue = repo.issue(pr.number)
 
 	pre_msg = "<pre>From: %s\n %s </pre>" % (efrom, msg)
@@ -80,7 +77,7 @@ def process_email(i, efrom, msg, pr):
 	return
 
 def get_all_prs():
-	print "reading cache"
+	print("reading cache")
 	mail.select(readonly=1) # Select inbox or default namespace
 	(retcode, messages) = mail.search(None, '(SEEN)')
 
@@ -91,10 +88,10 @@ def get_all_prs():
 		pr = get_find_pull_req(msg)
 		if pr != "":
 			pull_rq_db[msg_str['Message-ID']] = pr
-			#print pr,
+			#print(pr,)
 			#sys.stdout.flush()
-		print "%d/%d\n" % (num, len(messages[0].split()))
-	print "reading cache done"
+		print("%d/%d\n" % (num, len(messages[0].split())))
+	print("reading cache done")
 	return
 
 
@@ -104,8 +101,8 @@ mail.select(readonly=0) # Select inbox or default namespace
 (retcode, messages) = mail.search(None, '(UNSEEN)')
 #(retcode, messages) = mail.search(None, '(SEEN)')
 
-print retcode
-print messages
+print(retcode)
+print(messages)
 
 if retcode != 'OK':
 	exit (1)
@@ -123,12 +120,12 @@ for num in messages[0].split():
 	if msg_str.is_multipart():
 		continue
 
-	#print "Message-ID=", msg_str['Message-ID']
-	#print "In-Reply-To=", msg_str['In-Reply-To']
-	#print "Pull request =", pr
+	#print("Message-ID=", msg_str['Message-ID'])
+	#print("In-Reply-To=", msg_str['In-Reply-To'])
+	#print("Pull request =", pr)
 
 	if not 'In-Reply-To' in msg_str:
-		print "x",
+		print("x",)
 		sys.stdout.flush()
 		i = i + 1
 		continue
@@ -139,19 +136,19 @@ for num in messages[0].split():
 	else:
 		if msg_str['In-Reply-To'] in pull_rq_db:
 			pr = pull_rq_db[msg_str['In-Reply-To']]
-			print "Found pr from in replay"
+			print("Found pr from in replay")
 	if pr == "":
-		print ".",
+		print(".",)
 		sys.stdout.flush()
 		i = i + 1
 		continue
 
 	efrom = msg_str['From']
-    	body = msg_str.get_payload(decode=True)
+	body = msg_str.get_payload(decode=True)
 
-	print "Message-ID=", msg_str['Message-ID']
-	print "In-Reply-To=", msg_str['In-Reply-To']
-	print "Pull request =", pr
+	print("Message-ID=", msg_str['Message-ID'])
+	print("In-Reply-To=", msg_str['In-Reply-To'])
+	print("Pull request =", pr)
 
 	mail.store(num, '+FLAGS', '\\SEEN')
 	process_email(i, efrom, body, repo.pull_request(pr))

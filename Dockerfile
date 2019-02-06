@@ -8,34 +8,37 @@ RUN apt-get install -yy --no-install-recommends \
 	nginx \
         fcgiwrap \
         spawn-fcgi \
-	python \
+	python3 \
 	cron \
 	vim \
 	openssh-server \
-	python-pip python-setuptools python-github python-imaplib2 \
+	python3-pip \
+	python3-setuptools \
+	python3-github \
+	python3-imaplib2 \
 	procmail
 
 RUN git config --global user.email ofp.foundation@gmail.com
 RUN git config --global user.name "Github ODP bot"
 
-RUN pip install --upgrade pip
-RUN pip install github3.py
-RUN pip install python-bugzilla
+RUN pip3 install --upgrade pip
+RUN pip3 install github3.py
+RUN pip3 install python-bugzilla
 
 RUN git clone https://github.com/OpenDataPlane/github-scripts.git /githubscripts \
     && echo "#!/bin/bash \n \
       git clone https://github.com/OpenDataPlane/github-scripts.git \n \
       cd githubscripts \n \
       git pull \n  \
-      python gh-mail-pr.py \n  \
+      python3 gh-mail-pr.py \n  \
       sleep 5 \n \
-      python gh-mail-pr-dpdk.py \n \
+      python3 gh-mail-pr-dpdk.py \n \
       sleep 5 \n \
-      python gh-imap.py \n \
+      python3 gh-imap.py \n \
       sleep 5 \n \
-      python gh-checkpatch.py \n \
+      python3 gh-checkpatch.py \n \
       sleep 5 \n \
-      python gh-email-comments.py \n " \
+      python3 gh-email-comments.py \n " \
       > cron_job.sh \
     && chmod +x /cron_job.sh
 
