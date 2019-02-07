@@ -1,0 +1,10 @@
+dist: trusty
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+script:
+  - docker build  -t github-scripts .
