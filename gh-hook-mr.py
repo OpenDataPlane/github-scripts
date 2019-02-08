@@ -6,6 +6,7 @@
 # Note: version changed only on pull request update event.
 
 import cgi
+from dotenv import load_dotenv
 import pickle
 import sys
 import time
@@ -14,28 +15,24 @@ from io import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
-
+from pathlib import Path
 from github3 import login
 from github3 import pulls
 from github3 import issues
 from github3 import issue
 import os
 
-configfile = '~/gscripts_config.py'
-sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
-import gscripts_config as gcfg
+ghpath = Path.home() / '.env'
+load_dotenv(dotenv_path=str(ghpath))
 
-gh_login = gcfg.gcfg['gh']['login']
-gh_password = gcfg.gcfg['gh']['pass']
+gh_login = os.getenv("GH_LOGIN")
+gh_password = os.getenv("GH_PASS")
 
+if not gh_login or not gh_password:
+	print("GitHub login missing!")
+	sys.exit(1)
 
 qin = sys.stdin.read()
-#f = open('mr_%s.dump' % time.time(), 'w')
-#pickle.dump(qin, f)
-#f.close()
-
-#fname = "mr_1537464128.91.dump"
-#qin  = pickle.load( open(fname, "rb" ) )
 
 print("Content-type: text/html\n")
 print("""<!DOCTYPE HTML>
