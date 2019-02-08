@@ -7,18 +7,22 @@
 # Result is status on odp pull request github web  page and
 # label "checkpatch" set.
 
+from dotenv import load_dotenv
 from github3 import login
 import os
+from pathlib import Path
 import re
 import glob
 import sys
 
-configfile = '~/gscripts_config.py'
-sys.path.append(os.path.dirname(os.path.expanduser(configfile)))
-import gscripts_config as gcfg
+ghpath = Path.home() / '.env'
+load_dotenv(dotenv_path=str(ghpath))
 
-gh_login = gcfg.gcfg['gh']['login']
-gh_password = gcfg.gcfg['gh']['pass']
+gh_login = os.getenv("GH_LOGIN")
+gh_password = os.getenv("GH_PASS")
+if not gh_login or not gh_password:
+	print("GitHub login missing!")
+	sys.exit(1)
 
 gh = login(gh_login, gh_password)
 

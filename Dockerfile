@@ -20,6 +20,7 @@ RUN git config --global user.name "Github ODP bot"
 
 RUN pip3 install --upgrade pip
 RUN pip3 install github3.py
+RUN pip3 install python-dotenv
 
 RUN echo "server { \n \
 	listen ${LISTENING_PORT} default_server; \n \
@@ -43,8 +44,9 @@ RUN echo "server { \n \
 	} \n \
 }\n " > /etc/nginx/sites-available/default
 
+ADD .env /root/
+
 RUN mkdir -p  /var/www/html/html
-ADD gscripts_config.py /var/www/html/
 ADD gh-hook-mr.py /var/www/html/
 ADD gh-hook-mr-dpdk.py /var/www/html/
 
