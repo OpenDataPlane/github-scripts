@@ -9,17 +9,18 @@
 
 from dotenv import load_dotenv
 from github3 import login
-import os
+from os import getenv
 from pathlib import Path
 import re
+import subprocess
 import glob
 import sys
 
 ghpath = Path.home() / '.env'
 load_dotenv(dotenv_path=str(ghpath))
 
-gh_login = os.getenv("GH_LOGIN")
-gh_password = os.getenv("GH_PASS")
+gh_login = getenv("GH_LOGIN")
+gh_password = getenv("GH_PASS")
 if not gh_login or not gh_password:
 	print("GitHub login missing!")
 	sys.exit(1)
@@ -27,7 +28,7 @@ if not gh_login or not gh_password:
 gh = login(gh_login, gh_password)
 
 def my_system(cmd):
-	ret = os.system(cmd)
+	ret = subprocess.call(cmd, shell=False)
 	if ret:
 		print("Error: %s" % cmd)
 	return ret

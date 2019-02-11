@@ -2,9 +2,7 @@ FROM ubuntu:16.04
 
 ENV LISTENING_PORT=80
 
-RUN apt-get update --fix-missing
-
-RUN apt-get install -yy --no-install-recommends \
+RUN apt-get update && apt-get install -yy --no-install-recommends \
 	git \
 	nano \
 	nginx \
@@ -13,7 +11,9 @@ RUN apt-get install -yy --no-install-recommends \
 	python3 \
 	python3-pip \
 	python3-setuptools \
-	python3-github
+	python3-github \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN git config --global user.email ofp.foundation@gmail.com
 RUN git config --global user.name "Github ODP bot"
@@ -22,7 +22,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install github3.py
 RUN pip3 install python-dotenv
 
-RUN echo "server { \n \
+RUN printf "server { \n \
 	listen ${LISTENING_PORT} default_server; \n \
 	listen [::]:${LISTENING_PORT} default_server; \n \
 	root /var/www/html; \n \
