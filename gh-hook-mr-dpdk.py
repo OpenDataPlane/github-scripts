@@ -2,7 +2,7 @@
 
 # github pull request update script
 #
-# Script changes patch version and remove label Email_sent
+# Script changes patch version.
 # Note: version changed only on pull request update event.
 
 import cgi
@@ -15,11 +15,12 @@ from io import StringIO
 import sys, urllib
 from cgi import parse_qs, escape
 import re
+from pathlib import Path
 from github3 import login
 from github3 import pulls
 from github3 import issues
+from github3 import issue
 import os
-from pathlib import Path
 
 ghpath = Path.home() / '.env'
 load_dotenv(dotenv_path=str(ghpath))
@@ -30,7 +31,6 @@ gh_password = os.getenv("GH_PASS")
 if not gh_login or not gh_password:
 	print("GitHub login missing!")
 	sys.exit(1)
-
 
 qin = sys.stdin.read()
 
@@ -46,25 +46,7 @@ print("""<!DOCTYPE HTML>
 io = StringIO(qin)
 js = json.load(io)
 
-gh = login(gh_login, password=gh_password)
-me = gh.user()
-print(me)
-
-repo = 0
-for r in gh.iter_repos():
-	print(r.full_name)
-	if r.full_name == "OpenDataPlane/odp-dpdk":
-		repo = r
-		break
-
-if not repo:
-	print("Repo not found")
-	sys.exit(1)
-
-#for key, value in js['pull_request'].iteritems() :
-#   print "\n\n\n\n----------------"
-#    print key
-#    print value
+gh = login(gh_login, gh_password)
 
 action = js['action']
 if action == "synchronize" or action == "opened":
@@ -75,8 +57,8 @@ else:
 	sys.exit(0)
 
 pr_num  = js['pull_request']['number']
-pr = repo.pull_request(pr_num)
-issue =  repo.issue(pr_num)
+#pr = repo.pull_request(pr_num)
+issue = gh.issue("OpenDataPlane", "odp-dpdk", pr_num)
 
 
 branch  = js['pull_request']['base']['ref']
@@ -90,7 +72,7 @@ for m in re.finditer(r'\[PATCH.*v([0-9]+)\]', title):
 
 version += 1
 
-m = re.search(r"\[PATCH.*\] (.*)", title)
+m = re.search(r"\[PATCH.*?\] (.*)", title)
 if m:
 	title = m.group(1)
 
@@ -104,21 +86,7 @@ else:
 	issue.edit(title="[PATCH v%d] %s" % (version, title))
 print(issue.title)
 
-commits = js['pull_request']['commits']
-if commits > 20:
-	issue.add_labels("No_Email_sent")
-else:
-	# return code does not reflect if event was actually
-	# removed
-	issue.remove_label("Email_sent")
-
-try:
-	issue.remove_label("checkpatch")
-except:
-	pass
-
 print("body_text %s\n" % issue.body_text)
-
 
 print("<h1>all ok!</h1>")
 print("</body></html>")

@@ -2,7 +2,7 @@
 
 # github pull request update script
 #
-# Script changes patch version and remove label Email_sent
+# Script changes patch version.
 # Note: version changed only on pull request update event.
 
 import cgi
@@ -86,23 +86,7 @@ else:
 	issue.edit(title="[PATCH v%d] %s" % (version, title))
 print(issue.title)
 
-commits = js['pull_request']['commits']
-if commits > 20:
-	issue.add_labels("No_Email_sent")
-else:
-	# return code does not reflect if event was actually
-	# removed
-	try:
-		issue.remove_label("Email_sent")
-	except:
-		pass
-try:
-	issue.remove_label("checkpatch")
-except:
-	pass
-
 print("body_text %s\n" % issue.body_text)
-
 
 print("<h1>all ok!</h1>")
 print("</body></html>")
