@@ -25,11 +25,10 @@ import os
 ghpath = Path.home() / '.env'
 load_dotenv(dotenv_path=str(ghpath))
 
-gh_login = os.getenv("GH_LOGIN")
-gh_password = os.getenv("GH_PASS")
+gh_token = os.getenv("GH_TOKEN")
 
-if not gh_login or not gh_password:
-	print("GitHub login missing!")
+if not gh_token:
+	print("GitHub token missing!")
 	sys.exit(1)
 
 qin = sys.stdin.read()
@@ -46,7 +45,7 @@ print("""<!DOCTYPE HTML>
 io = StringIO(qin)
 js = json.load(io)
 
-gh = login(gh_login, gh_password)
+gh = login(token=gh_token)
 
 action = js['action']
 if action == "synchronize" or action == "opened":
