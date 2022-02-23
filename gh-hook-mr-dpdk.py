@@ -13,13 +13,9 @@ import time
 import json
 from io import StringIO
 import sys, urllib
-from cgi import parse_qs, escape
 import re
 from pathlib import Path
 from github3 import login
-from github3 import pulls
-from github3 import issues
-from github3 import issue
 import os
 
 ghpath = Path.home() / '.env'
