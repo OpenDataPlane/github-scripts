@@ -1,8 +1,8 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 
 ENV LISTENING_PORT=80
 
-RUN apt-get update && apt-get install -yy --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yy --no-install-recommends \
 	git \
 	nano \
 	nginx \
